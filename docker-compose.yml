@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    stdin_open: true
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+    networks:
+      - predictivehire
+    environment:
+      - DB_HOST=mongo
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - predictivehire
+    volumes:
+      - mongo-data:/data/db
+
+networks:
+  predictivehire:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
