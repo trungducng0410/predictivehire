@@ -19,20 +19,34 @@ password = predictivehire
 If your account is locked, send a POST request to /v1/reset to reset the account :D
 ```
 curl --request POST \
-  --url http://localhost:9000/v1/reset
+  --url http://localhost:3000/v1/reset
 ```
 
 # How to run it
 
-#### + Using docker-compose
+#### Using docker-compose
 
 ``` docker-compose up ``` and DONE!
 
-#### + Dev environment
+#### Dev environment
 
 Start your own mongoDB instance (port 27017) or using docker
 
 ``` docker run --name mongo -p 27017:27017 mongo ```
+
+Use ``` http://localhost:3000/v1/login ``` to test the API
+
+Here is a sample request
+
+```
+curl --request POST \
+  --url http://localhost:3000/v1/login \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"email": "admin@predictivehire.com",
+	"password": "predictivehire"
+}'
+```
 
 Run following commands
 
