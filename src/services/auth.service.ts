@@ -8,7 +8,6 @@ import { sign } from "jsonwebtoken";
 import LogService from "./log.service";
 
 const MAX_FAIL = 3;
-const LOG_PERIOD = 5 * 60000;
 const LOCK_TIME = 5 * 60000;
 
 class AuthService {
@@ -74,7 +73,7 @@ class AuthService {
     private async shouldLockAccount(user: IUser): Promise<boolean> {
         const logs = await this.logService.getLogs(
             user.email,
-            Date.now() - LOG_PERIOD
+            Date.now() - LOCK_TIME
         );
 
         if (logs.length < MAX_FAIL) return false;
