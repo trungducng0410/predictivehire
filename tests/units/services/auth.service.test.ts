@@ -6,8 +6,7 @@ import { User } from "../../../src/models/user.model";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import LogService from "../../../src/services/log.service";
-
-const LOCK_TIME = 5 * 60000;
+import { LOCK_TIME, MAX_FAIL } from "../../../src/services/auth.service";
 
 describe("AuthService", () => {
     let authService: AuthService;
@@ -75,7 +74,7 @@ describe("AuthService", () => {
             await expect(authService.login(user)).rejects.toThrow(
                 new HttpError(
                     400,
-                    `Your provided password is not matched. Your account will be locked after 3 consecutive fail attempts`
+                    `Your provided password is not matched. Your account will be locked after ${MAX_FAIL} consecutive fail attempts`
                 )
             );
             expect(UserModel.findOne).toBeCalledTimes(1);

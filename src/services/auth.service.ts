@@ -7,8 +7,8 @@ import { Document } from "mongoose";
 import { sign } from "jsonwebtoken";
 import LogService from "./log.service";
 
-const MAX_FAIL = 3;
-const LOCK_TIME = 5 * 60000;
+export const MAX_FAIL = 3;
+export const LOCK_TIME = 1 * 60000;
 
 class AuthService {
     public users = UserModel;
