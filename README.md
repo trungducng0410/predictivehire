@@ -36,6 +36,8 @@ curl --request POST \
   --url http://localhost:3000/v1/reset
 ```
 
+By default, the account will be unlocked automatically after 5 minutes. But if you want to it run faster, please change the value of **LOCK_TIME** in **auth.service.ts** file  https://github.com/trungducng0410/predictivehire/blob/033ed4546ad66b11b5547902b3d09a164de0c741/src/services/auth.service.ts#L12
+
 # How to run it
 
 #### Using docker-compose
