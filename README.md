@@ -36,7 +36,7 @@ curl --request POST \
   --url http://localhost:3000/v1/reset
 ```
 
-By default, the account will be unlocked automatically after 5 minutes. But if you want to it run faster, please change the value of **LOCK_TIME** in **auth.service.ts** file  https://github.com/trungducng0410/predictivehire/blob/033ed4546ad66b11b5547902b3d09a164de0c741/src/services/auth.service.ts#L12
+By default, the account will be unlocked automatically after 1 minute. Please change the value of **LOCK_TIME** in **auth.service.ts** file to modify the lock period. https://github.com/trungducng0410/predictivehire/blob/fc42b60baf28fbf1d574046d38de876d4d917b13/src/services/auth.service.ts#L11
 
 # How to run it
 
