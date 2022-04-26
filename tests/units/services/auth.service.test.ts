@@ -7,6 +7,8 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import LogService from "../../../src/services/log.service";
 
+const LOCK_TIME = 5 * 60000;
+
 describe("AuthService", () => {
     let authService: AuthService;
     let logService: LogService;
@@ -48,7 +50,14 @@ describe("AuthService", () => {
             UserModel.findOne = jest.fn().mockResolvedValue(lockedUser);
 
             await expect(authService.login(user)).rejects.toThrow(
-                new HttpError(400, `Your account '${user.email}' is locked`)
+                new HttpError(
+                    400,
+                    `Your account '${
+                        user.email
+                    }' is locked. Please try again in ${
+                        LOCK_TIME / 60000
+                    } minutes`
+                )
             );
             expect(UserModel.findOne).toBeCalledTimes(1);
         });
