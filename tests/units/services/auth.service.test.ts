@@ -15,7 +15,7 @@ describe("AuthService", () => {
         _id: "507f1f77bcf86cd799439011",
         email: "test@email.com",
         password: "password",
-        active: true,
+        lockUntil: 1,
     };
 
     describe("login", () => {
@@ -43,7 +43,10 @@ describe("AuthService", () => {
         });
 
         it("should throw error when user is not active", async () => {
-            const lockedUser = { ...testUser, active: false };
+            const lockedUser = {
+                ...testUser,
+                lockUntil: Date.now() + LOCK_TIME,
+            };
             const user = new User(lockedUser.email, lockedUser.password);
 
             UserModel.findOne = jest.fn().mockResolvedValue(lockedUser);
@@ -53,9 +56,9 @@ describe("AuthService", () => {
                     400,
                     `Your account '${
                         user.email
-                    }' is locked. Please try again in ${
-                        LOCK_TIME / 60000
-                    } minutes`
+                    }' is locked. Please try again in ${Math.ceil(
+                        (lockedUser.lockUntil - Date.now()) / 60000
+                    )} minutes`
                 )
             );
             expect(UserModel.findOne).toBeCalledTimes(1);

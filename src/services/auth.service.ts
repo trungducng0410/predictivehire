@@ -26,25 +26,25 @@ class AuthService {
             );
         }
 
-        if (!user.active) {
+        const isLocked = user.lockUntil && user.lockUntil > Date.now();
+        if (isLocked) {
             throw new HttpError(
                 400,
-                `Your account '${data.email}' is locked. Please try again in ${
-                    LOCK_TIME / 60000
-                } minutes`
+                `Your account '${
+                    data.email
+                }' is locked. Please try again in ${Math.ceil(
+                    (user.lockUntil - Date.now()) / 60000
+                )} minutes`
             );
         }
 
         const isPasswordMatched = await compare(data.password, user.password);
         if (!isPasswordMatched) {
             await this.logService.writeLog(user.email, "fail");
-            const isLocked = await this.shouldLockAccount(user);
-            if (isLocked) {
-                user.active = false;
+            const shouldLock = await this.shouldLockAccount(user);
+            if (shouldLock) {
+                user.lockUntil = Date.now() + LOCK_TIME;
                 user.save();
-                setTimeout(() => {
-                    this.unlockUser(user);
-                }, LOCK_TIME);
             }
             throw new HttpError(
                 400,
@@ -53,12 +53,6 @@ class AuthService {
         }
 
         return this.generateToken(user);
-    }
-
-    private unlockUser(user: Document<any> & IUser): void {
-        user.active = true;
-        user.save();
-        console.log(`Email ${user.email} is unlocked`);
     }
 
     private generateToken(user: IUser): string {
